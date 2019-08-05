@@ -1,12 +1,22 @@
-interface UserProps {
-  name: string;
-  age: number;
+import { Model } from './Model';
+import { Eventing } from './Eventing';
+import { ApiSync } from './ApiSync';
+import { Attributes } from './Attributes';
+
+export interface UserProps {
+  id?: number;
+  name?: string; //? make property optional
+  age?: number;
 }
 
-export class User {
-  constructor(private data: UserProps){}
+const rootUrl = 'http://localhost:3000/users';
 
-  get(propName: string):(number | string ){
-    return this.data[propName];
+export class User extends Model<UserProps> {
+  static buildUser(attrs: UserProps): User {
+    return new User(
+      new Attributes<UserProps>(attrs),
+      new Eventing(),
+      new ApiSync<UserProps>(rootUrl)
+    );
   }
 }
